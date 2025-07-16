@@ -40,7 +40,10 @@ class PengisiBorangController extends Controller
         // Jika ada periode_akreditasi_id, ambil data periode dan prodi terkait saja
         if ($request->has('periode_akreditasi_id')) {
             $periode = PeriodeAkreditasi::with('programStudi')->findOrFail($request->periode_akreditasi_id);
-            $karyawan = Karyawan::all();
+            // Ambil semua karyawan yang sudah dipilih pada periode & kriteria ini
+            $usedKaryawanIds = PengisiBorang::where('periode_akreditasi_id', $periode->id)
+                ->pluck('karyawan_id')->toArray();
+            $karyawan = Karyawan::whereNotIn('id', $usedKaryawanIds)->get();
             $kriteria = Kriteria::where('instrumen_akreditasi_id', $periode->instrumen_akreditasi_id)->get();
         
             return view('pengisi_borang.create', [
@@ -85,7 +88,11 @@ class PengisiBorangController extends Controller
     {
         $pengisiBorang = PengisiBorang::findOrFail($id);
     $periodeAkreditasi = PeriodeAkreditasi::with('programStudi')->get();
-    $karyawan = Karyawan::all();
+        // Karyawan yang sudah dipilih di periode ini, kecuali yang sedang diedit
+        $usedKaryawanIds = \App\Models\PengisiBorang::where('periode_akreditasi_id', $pengisiBorang->periode_akreditasi_id)
+            ->where('id', '!=', $pengisiBorang->id)
+            ->pluck('karyawan_id')->toArray();
+        $karyawan = Karyawan::whereNotIn('id', $usedKaryawanIds)->orWhere('id', $pengisiBorang->karyawan_id)->get();
     $kriteria = Kriteria::all();
     return view('pengisi_borang.edit', compact('pengisiBorang', 'periodeAkreditasi', 'karyawan', 'kriteria'));
 

@@ -9,6 +9,7 @@
             <th>Kriteria</th>
             <th>Karyawan Pengisi</th>
             <th>Status</th>
+            <th>Aksi</th>
         </tr>
     </thead>
     <tbody>
@@ -22,7 +23,12 @@
                 @endphp
                 {{ ($pengisi && $pengisi->karyawan) ? $pengisi->karyawan->nama : '-' }}
             </td>
-            <td>{{ $penyusunan[$kriteria->id]->status ?? '-' }}</td>
+            <td>
+                {{ $penyusunan[$kriteria->id]->status ?? '-' }}
+            </td>
+            <td>
+                <a href="{{ route('penyusunan_led.input', ['kriteria_id' => $kriteria->id, 'periode_akreditasi_id' => $periode->id]) }}" class="btn btn-primary btn-sm">{{ isset($penyusunan[$kriteria->id]) ? 'Edit' : 'Input' }} LED</a>
+            </td>
         </tr>
         @empty
         <tr><td colspan="3" class="text-center">Belum ada data.</td></tr>

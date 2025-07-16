@@ -41,7 +41,13 @@
         <tr>
             <td>{{ $item->periodeAkreditasi->periode ?? '-' }}</td>
             <td>{{ $item->periodeAkreditasi->programStudi->nama_prodi ?? '-' }}</td>
-            <td>{{ $item->kriteria->nama_kriteria ?? '-' }}</td>
+            <td>
+                @if($item->kriteria)
+                    [{{ $item->kriteria->no_kriteria }}] {{ $item->kriteria->nama_kriteria }}
+                @else
+                    -
+                @endif
+            </td>
             <td>{{ $item->karyawan->nama ?? '-' }}</td>
             <td>{{ $item->karyawan->nidn ?? '-' }}</td>
             <td>{{ $item->karyawan->nitk ?? '-' }}</td>

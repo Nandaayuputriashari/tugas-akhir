@@ -13,6 +13,9 @@ class KriteriaController extends Controller
      */
     public function index(Request $request)
     {
+        if (!$request->filled('instrumen_akreditasi_id')) {
+            return redirect()->route('instrumen-akreditasi.index')->with('error', 'Pilih instrumen akreditasi terlebih dahulu.');
+        }
         $query = Kriteria::with('parent');
         if ($request->filled('instrumen_akreditasi_id')) {
             $query->where('instrumen_akreditasi_id', $request->instrumen_akreditasi_id);
@@ -28,7 +31,7 @@ class KriteriaController extends Controller
                     });
             });
         }
-        $data = $query->latest()->get();
+        $data = $query->orderByRaw('LENGTH(no_kriteria), no_kriteria')->get();
         $instrumen_akreditasi_id = $request->instrumen_akreditasi_id;
         return view('kriteria.index', compact('data', 'instrumen_akreditasi_id'));
     }
@@ -58,8 +61,8 @@ class KriteriaController extends Controller
     'instrumen_akreditasi_id' => 'required|exists:instrumen_akreditasis,id',
 ]);
 //echo $request->instrumen_akreditasi_id;
-        Kriteria::create($request->all());
-       return redirect()->route('kriteria.index')->with('success', 'Kriteria berhasil ditambahkan.');
+        $kriteria = Kriteria::create($request->all());
+        return redirect()->route('kriteria.index', ['instrumen_akreditasi_id' => $kriteria->instrumen_akreditasi_id])->with('success', 'Kriteria berhasil ditambahkan.');
 
     }
 
@@ -96,7 +99,7 @@ class KriteriaController extends Controller
         ]);
 
         $kriteria->update($request->all());
-        return redirect()->route('kriteria.index')->with('success', 'Kriteria berhasil diperbarui.');
+        return redirect()->route('kriteria.index', ['instrumen_akreditasi_id' => $kriteria->instrumen_akreditasi_id])->with('success', 'Kriteria berhasil diperbarui.');
 
     }
 

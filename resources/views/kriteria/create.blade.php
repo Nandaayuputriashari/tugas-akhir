@@ -53,7 +53,7 @@
             <option value="">-- Tidak Ada --</option>
             @foreach($parentOptions as $item)
                 <option value="{{ $item->id }}" {{ old('parent_kriteria') == $item->id ? 'selected' : '' }}>
-                    {{ $item->nama_kriteria }}
+                    [{{ $item->no_kriteria }}] {{ $item->nama_kriteria }}
                 </option>
             @endforeach
         </select>

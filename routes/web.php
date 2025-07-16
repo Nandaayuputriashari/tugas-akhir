@@ -62,3 +62,7 @@ Route::resource('instrumen-akreditasi', InstrumenAkreditasiController::class)->m
 Route::resource('penyusunan-led', PenyusunanLEDController::class)->middleware('auth')->parameters([
     'penyusunan-led' => 'penyusunan_led'
 ]);
+
+// Penyusunan LED input/edit
+Route::get('penyusunan-led/input', [PenyusunanLEDController::class, 'input'])->name('penyusunan_led.input')->middleware('auth');
+Route::post('penyusunan-led/store', [PenyusunanLEDController::class, 'store'])->name('penyusunan_led.store')->middleware('auth');
